@@ -28,7 +28,8 @@
           "buildDepsName": "build-deps",
           "watchDepsName": "watch-deps"
         }
-      }
+      },
+      "exclude": ["prisma/*", "libs/prisma/*", "libs/prisma-schema/*"]
     },
     {
       "plugin": "@nx/react/router-plugin",
@@ -76,6 +77,15 @@
         "previewTargetName": "preview",
         "buildDepsTargetName": "build-deps",
         "watchDepsTargetName": "watch-deps"
+      }
+    },
+    {
+      "plugin": "@nx/js/typescript",
+      "include": ["prisma/*", "libs/prisma/*", "libs/prisma-schema/*"],
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
+        }
       }
     }
   ],
