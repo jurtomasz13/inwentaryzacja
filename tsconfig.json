@@ -13,15 +13,6 @@
       "path": "./apps/backend"
     },
     {
-      "path": "./libs"
-    },
-    {
-      "path": "./prisma"
-    },
-    {
-      "path": "./libs/prisma"
-    },
-    {
       "path": "./libs/prisma-schema"
     }
   ]
