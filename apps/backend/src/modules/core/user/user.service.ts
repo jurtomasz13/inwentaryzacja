@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserDto } from '../auth/dto/user.dto';
-import { CreateUserDto } from '../auth/dto/createUser.dto';
+import { UserDto } from '../user/dto/user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 import { plainToInstance } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
 import { DefaultArgs } from '@prisma/client/runtime/client';
@@ -85,8 +85,12 @@ export class UserService {
     return bcrypt.hash(password, 10);
   }
 
+  async comparePassword(password: string, hash: string): Promise<boolean> {
+    return bcrypt.compare(password, hash);
+  }
+
   mapToDto(user: User): UserDto {
-    return plainToInstance(UserDto, user);
+    return plainToInstance(UserDto, user, { excludeExtraneousValues: true });
   }
 
   mapToDtos(users: User[]): UserDto[] {

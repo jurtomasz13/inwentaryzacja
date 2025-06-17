@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from './dto/createUser.dto';
-import { UserDto } from './dto/user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserDto } from '../user/dto/user.dto';
 import { JwtPayload } from './types';
 
 @Injectable()
@@ -33,12 +33,15 @@ export class AuthService {
   async validateUserByPassword(email: string, password: string) {
     const userEntity = await this.userService.findOneWithPassword(email);
 
-    if (userEntity && userEntity.password === password) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = userEntity;
-      return result;
+    const passwordMatch = await this.userService.comparePassword(
+      password,
+      userEntity.password
+    );
+
+    if (passwordMatch) {
+      return this.userService.mapToDto(userEntity);
     }
 
-    return this.userService.mapToDto(userEntity);
+    throw new UnauthorizedException('Invalid credentials');
   }
 }
