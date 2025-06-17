@@ -58,15 +58,9 @@ export class UserService {
   }
 
   async findOneByEmail(email: string): Promise<UserDto> {
-    const userEntity = await this.prisma.user.findUnique({
+    return this.findOne({
       where: { email },
     });
-
-    if (!userEntity) {
-      throw new NotFoundException('User not found');
-    }
-
-    return this.mapToDto(userEntity);
   }
 
   async findOneWithPassword(email: string): Promise<User> {

@@ -1,10 +1,16 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CategoryDto } from './dto/category.dto';
 import { plainToInstance } from 'class-transformer';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UserDto } from '../user/dto/user.dto';
-import { Category } from '@prisma/client';
+import { Category, Prisma } from '@prisma/client';
+import { DefaultArgs } from '@prisma/client/runtime/client';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -46,6 +52,71 @@ export class CategoryService {
     });
 
     return this.mapToDtos(items);
+  }
+
+  async findOne(
+    query: Prisma.CategoryFindUniqueArgs<DefaultArgs>
+  ): Promise<CategoryDto> {
+    const categoryEntity = await this.prisma.category.findUnique(query);
+
+    if (!categoryEntity) {
+      throw new NotFoundException('Category not found');
+    }
+
+    return this.mapToDto(categoryEntity);
+  }
+
+  async findOneById(categoryId: CategoryDto['id'], userId: UserDto['id']) {
+    return this.findOne({
+      where: {
+        id: categoryId,
+        userId: userId,
+      },
+    });
+  }
+
+  async update(
+    updateData: UpdateCategoryDto,
+    userId: UserDto['id']
+  ): Promise<CategoryDto> {
+    try {
+      const { id, ...data } = updateData;
+
+      const categoryEntity = await this.prisma.category.update({
+        where: {
+          id: id,
+          userId: userId,
+        },
+        data: data,
+      });
+
+      if (!categoryEntity) {
+        throw new NotFoundException('Category not found');
+      }
+
+      return this.mapToDto(categoryEntity);
+    } catch (error) {
+      if (!this.prisma.isPrismaError(error)) {
+        throw error;
+      }
+
+      // Handle specific Prisma errors
+
+      throw error;
+    }
+  }
+
+  async delete(categoryId: CategoryDto['id'], userId: UserDto['id']) {
+    await this.findOneById(categoryId, userId);
+
+    await this.prisma.category.delete({
+      where: {
+        id: categoryId,
+        userId: userId,
+      },
+    });
+
+    return;
   }
 
   mapToDto(category: Category): CategoryDto {
