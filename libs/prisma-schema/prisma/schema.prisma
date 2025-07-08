@@ -30,8 +30,8 @@ model User {
 
   products  Product[]
   categories Category[]
-  Room Room[]
-  Order Order[]
+  rooms Room[]
+  orders Order[]
   inventories Inventory[]
 }
 
@@ -49,8 +49,8 @@ model Product {
   category    Category @relation(fields: [categoryId], references: [id])
   categoryId  String
 
-  OrderItem OrderItem[]
-  InventoryItem InventoryItem[]
+  orderItems OrderItem[]
+  inventoryItems InventoryItem[]
 
   @@unique([code, userId])
 }
@@ -117,7 +117,6 @@ model InventoryItem {
 
 model Order {
   id          String   @id @default(cuid())
-  date        DateTime
   name        String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
