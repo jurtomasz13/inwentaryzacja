@@ -12,7 +12,7 @@ export class UpdateProductDto {
   code: string;
 
   @IsOptional()
-  @IsEnum(() => Unit)
+  @IsEnum(Unit)
   unit: Unit;
 
   @IsOptional()

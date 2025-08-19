@@ -19,6 +19,7 @@ export class RoomService extends PrismaMapperBase<Room, RoomDto> {
     const roomEntity = await this.prisma.room.create({
       data: {
         name: CreateRoomDto.name,
+        description: CreateRoomDto?.description,
         user: {
           connect: { id: userId },
         },

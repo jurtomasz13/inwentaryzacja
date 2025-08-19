@@ -9,7 +9,7 @@ import { PrismaExceptionFilter } from './filters/prisma.filter';
 import { GenericExceptionFilter } from './filters/generic.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const reflector = app.get(Reflector);
   const globalPrefix = 'api';
 
