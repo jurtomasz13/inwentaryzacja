@@ -5,7 +5,7 @@ import { Button } from "../components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card"
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from "../components/ui/dialog"
 import { DialogHeader } from "../components/ui/dialog"
-import { useCreateProduct, useDeleteProduct, useProducts, useUpdateProduct } from "@/hooks/products"
+import { useCreateProduct, useDeleteProduct, useProductMutations, useProducts, useUpdateProduct } from "@/hooks/products"
 import { Product } from "@/api/products"
 import { ProductForm, ProductFormValues } from "../components/forms/product-form"
 import { useCategories } from "@/hooks/categories"
@@ -21,9 +21,7 @@ export function ProductsPage() {
     const { data: categories = [], isLoading: isLoadingCategories, error: errorCategories } = useCategories();
 
     // Mutations
-    const createProductMutation = useCreateProduct();
-    const updateProductMutation = useUpdateProduct();
-    const deleteProductMutation = useDeleteProduct();
+    const { createProductMutation, deleteProductMutation, updateProductMutation } = useProductMutations();
 
     const handleEdit = (product: Product) => {
         setIsDialogOpen(true)

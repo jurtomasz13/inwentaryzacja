@@ -34,10 +34,8 @@ export const useDeleteRoom = () => {
     })
 };
 
-export const useRoomMutations = () => {
-    return {
-        createRoomMutation: useCreateRoom(),
-        updateRoomMutation: useUpdateRoom(),
-        deleteRoomMutation: useDeleteRoom(),
-    }
-}
+export const useRoomMutations = () => ({
+    createRoomMutation: useCreateRoom(),
+    updateRoomMutation: useUpdateRoom(),
+    deleteRoomMutation: useDeleteRoom(),
+});

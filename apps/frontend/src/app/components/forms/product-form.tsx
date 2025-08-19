@@ -31,6 +31,7 @@ export function ProductForm({ editingProduct, categories, onSubmit, onCancel }: 
     });
     
     const isEditing = !!editingProduct;
+    //TODO: Put it somewhere else
     const units = [
         { id: "KILOGRAM", name: "KILOGRAMY" },
         { id: "PIECE", name: "SZTUKI"},

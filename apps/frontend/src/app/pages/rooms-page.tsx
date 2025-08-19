@@ -30,7 +30,6 @@ export function RoomsPage() {
     }
 
     const handleSubmit = (data: RoomFormValues, isEditing: boolean) => {
-        console.log('submit');
         if (isEditing && editingRoom?.id) {
             updateRoomMutation.mutate({ id: editingRoom.id, updates: data }, {
                 onSettled: () => setIsDialogOpen(false)

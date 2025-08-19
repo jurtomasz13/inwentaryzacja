@@ -34,3 +34,9 @@ export const useDeleteProduct = () => {
         onSuccess: () => queryClient.invalidateQueries({ queryKey: QUERY_KEY_PRODUCTS }),
     })
 };
+
+export const useProductMutations = () => ({
+    createProductMutation: useCreateProduct(),
+    updateProductMutation: useUpdateProduct(),
+    deleteProductMutation: useDeleteProduct(),
+});

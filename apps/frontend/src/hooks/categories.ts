@@ -34,10 +34,9 @@ export const useDeleteCategory = () => {
     })
 };
 
-export const useCategoryMutations = () => {
-    return {
-        createCategoryMutation: useCreateCategory(),
-        updateCategoryMutation: useUpdateCategory(),
-        deleteCategoryMutation: useDeleteCategory(),
-    }
-}
+export const useCategoryMutations = () => ({
+    createCategoryMutation: useCreateCategory(),
+    updateCategoryMutation: useUpdateCategory(),
+    deleteCategoryMutation: useDeleteCategory(),
+});
+
