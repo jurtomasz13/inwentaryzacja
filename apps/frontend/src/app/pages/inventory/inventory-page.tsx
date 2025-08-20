@@ -1,5 +1,5 @@
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../../components/ui/table"
-import { Edit, Plus, Trash2 } from "lucide-react"
+import { Edit, Plus, Trash2, View } from "lucide-react"
 import { useState } from "react"
 import { Button } from "../../components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/card"
@@ -21,6 +21,7 @@ export function InventoryPage() {
     // Mutations
     const { createInventoryMutation, deleteInventoryMutation, updateInventoryMutation } = useInventoryMutations();
 
+    // TODO: add EDIT feature
     const handleEdit = (room: Inventory) => {
         setIsDialogOpen(true)
         setEditingRoom(room);
@@ -91,7 +92,7 @@ export function InventoryPage() {
                         <TableRow>
                             <TableHead>Nazwa</TableHead>
                             <TableHead>Data</TableHead>
-                            <TableHead>Status</TableHead>
+                            {/* <TableHead>Status</TableHead> */}
                             <TableHead className="text-right">Akcje</TableHead>
                         </TableRow>
                         </TableHeader>
@@ -99,15 +100,18 @@ export function InventoryPage() {
                         {inventories.map((inventory) => (
                             <TableRow key={inventory.id}>
                                 <TableCell className="font-medium">{inventory.name}</TableCell>
-                                <TableCell>{inventory.description}</TableCell>
+                                {/* <TableCell></TableCell> */}
                                 <TableCell>{new Date(inventory.createdAt).toLocaleDateString("pl-PL")}</TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex justify-end space-x-2">
                                         <Link to={`./${inventory.id}`}>
                                             <Button variant="outline" size="sm">
-                                                <Edit className="h-4 w-4" />
+                                                <View className="h-4 w-4" />
                                             </Button>
                                         </Link>
+                                        <Button variant="outline" size="sm" onClick={() => handleEdit(inventory)}>
+                                            <Edit className="h-4 w-4" />
+                                        </Button>
                                         <Button variant="outline" size="sm" onClick={() => handleDelete(inventory.id)}>
                                             <Trash2 className="h-4 w-4" />
                                         </Button>

@@ -8,7 +8,7 @@ import { DatePicker } from "../ui/date-picker";
 import { useEffect } from "react";
 
 const inventorySchema = z.object({
-    date: z.date(),
+    date: z.any(),
     name: z.string().min(2, "Nazwa inwentaryzacji musi mieć co najmniej 2 znaki"),
 });
 
@@ -39,14 +39,21 @@ export function InventoryForm({ editingInventory, onSubmit, onCancel }: Inventor
                 <Controller
                     name="date"
                     control={control}
-                    render={({ field }) => (
-                        <DatePicker
-                            value={field.value}
-                            onChange={field.onChange}
-                        />
-                    )} 
+                    render={({ field }) => {
+                        // Initialize date field to current date if undefined here, because onChange in DatePicker doesn't trigger re-render
+                        if (!field.value) {
+                            field.onChange(new Date())
+                        }
+
+                        return (
+                            <DatePicker
+                                id="date"
+                                onChange={field.onChange}
+                            />
+                        )    
+                    }} 
                 />
-                {errors.date && <span className="text-red-500">{errors.date.message}</span>}
+                {/* {errors.date && <span className="text-red-500">{errors.date.message}</span>} */}
             </div>
 
             <div>

@@ -12,7 +12,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "./popover"
-import { useEffect } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 
 function formatDate(date: Date | undefined) {
     if (!date) {
@@ -34,89 +34,81 @@ function isValidDate(date: Date | undefined) {
 }
 
 type DatePickerProps = {
-    id: string
-    value: Date
     onChange: (date: Date | undefined) => void
+    id?: string
     placeholder?: string
 }
 
 // Fix date picker so it works with react-hook-form
 
-export function DatePicker({ value: propValue, onChange, placeholder = "June 01, 2025", id = "date" }: DatePickerProps) {
-    const [open, setOpen] = React.useState(false)
-    const [date, setDate] = React.useState<Date | undefined>(
-        new Date("2025-06-01")
+export function DatePicker({ onChange, id = "date" }: DatePickerProps) {
+    const [open, setOpen] = useState(false)
+    const [date, setDate] = useState<Date>(
+        new Date()
     )
-    const [month, setMonth] = React.useState<Date | undefined>(date)
-    const [value, setValue] = React.useState(formatDate(date))
+    const [month, setMonth] = useState<Date | undefined>(date)
+    const [value, setValue] = useState(formatDate(date))
 
-    useEffect(() => {
-        if (propValue) {
-            setDate(propValue)
-            setMonth(propValue)
-            setValue(formatDate(propValue))
-        }
-    }, [propValue])
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        const date = new Date(value)
+        setValue(value)
+        setMonth(date)
+        onChange(date)
+    }
+
+    const handleSelect = (date: Date | undefined) => {
+        if (!date) return;
+
+        setDate(date)
+        setValue(formatDate(date))
+        onChange(date)
+        setOpen(false)
+    }
     
     return (
         <div className="flex flex-col gap-3">
-        <Label htmlFor="date" className="px-1">
-            Subscription Date
-        </Label>
-        <div className="relative flex gap-2">
-            <Input
-            id={id}
-            value={value}
-            placeholder={placeholder}
-            className="bg-background pr-10"
-            onChange={(e) => {
-                const date = new Date(e.target.value)
-                setValue(e.target.value)
-                onChange(new Date(date))
-                if (isValidDate(date)) {
-                    setDate(date)
-                    setMonth(date)
-                }
-            }}
-            onKeyDown={(e) => {
-                if (e.key === "ArrowDown") {
-                    e.preventDefault()
-                    setOpen(true)
-                }
-            }}
-            />
-            <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                id="date-picker"
-                variant="ghost"
-                className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
-                >
-                <CalendarIcon className="size-3.5" />
-                <span className="sr-only">Select date</span>
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent
-                className="w-auto overflow-hidden p-0"
-                align="end"
-                alignOffset={-8}
-                sideOffset={10}
-            >
-                <Calendar
-                mode="single"
-                selected={date}
-                captionLayout="dropdown"
-                month={month}
-                onMonthChange={setMonth}
-                onSelect={(date) => {
-                    setDate(date)
-                    setValue(formatDate(date))
-                    setOpen(false)
-                }}
+            <div className="relative flex gap-2">
+                <Input
+                    id={id}
+                    value={value}
+                    className="bg-background pr-10"
+                    onChange={handleChange}
+                    onKeyDown={(e) => {
+                        if (e.key === "ArrowDown") {
+                            e.preventDefault()
+                            setOpen(true)
+                        }
+                    }}
                 />
-            </PopoverContent>
-            </Popover>
-        </div>
+                <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                    <Button
+                        id="date-picker"
+                        variant="ghost"
+                        className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
+                    >
+                    <CalendarIcon className="size-3.5" />
+                    <span className="sr-only">Select date</span>
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                    className="w-auto overflow-hidden p-0"
+                    align="end"
+                    alignOffset={-8}
+                    sideOffset={10}
+                >
+                    <Calendar
+                        mode="single"
+                        selected={date}
+                        captionLayout="dropdown"
+                        month={month}
+                        onMonthChange={setMonth}
+                        onSelect={handleSelect}
+                    />
+                </PopoverContent>
+                </Popover>
+            </div>
         </div>
     )
 }

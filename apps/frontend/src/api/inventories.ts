@@ -11,7 +11,7 @@ export type UpdateInventory = CreateInventory;
 export type Inventory = {
     id: string;
     name: string;
-    description: string;
+    date: string;
     createdAt: string;
 }
 
