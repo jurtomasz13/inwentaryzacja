@@ -1,9 +1,10 @@
 import * as z from "zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { DatePicker } from "../ui/date-picker";
 import { useEffect } from "react";
 
 const inventorySchema = z.object({
@@ -20,7 +21,7 @@ type InventoryFormProps = {
 }
 
 export function InventoryForm({ editingInventory, onSubmit, onCancel }: InventoryFormProps) {
-    const { register, handleSubmit, reset, formState: { errors }} = useForm<InventoryFormValues>({
+    const { control, register, handleSubmit, reset, formState: { errors }} = useForm<InventoryFormValues>({
         resolver: zodResolver(inventorySchema),
         defaultValues: editingInventory || { name: "" }
     });
@@ -35,7 +36,16 @@ export function InventoryForm({ editingInventory, onSubmit, onCancel }: Inventor
         <form onSubmit={handleSubmit((data) => onSubmit(data, isEditing))} className="space-y-4">
             <div>
                 <Label htmlFor="date">Data inwentaryzacji</Label>
-                <Input id="date" placeholder="np. 13.11.2000" {...register("date")} />
+                <Controller
+                    name="date"
+                    control={control}
+                    render={({ field }) => (
+                        <DatePicker
+                            value={field.value}
+                            onChange={field.onChange}
+                        />
+                    )} 
+                />
                 {errors.date && <span className="text-red-500">{errors.date.message}</span>}
             </div>
 
